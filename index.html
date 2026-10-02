@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JobShield AI | Palm92 Intelligence</title>
+<style>
+:root{--navy:#071a2b;--panel:#0d263b;--amber:#ffb020;--cyan:#56d6d2;--text:#f7fafc;--muted:#b8c5d1;--red:#ff7b72}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(145deg,#061421,#0a2337);color:var(--text)}
+main{max-width:1050px;margin:auto;padding:28px 18px 60px}.brand{font-weight:800;color:var(--cyan);letter-spacing:.08em}.hero{padding:32px 0 18px}
+h1{font-size:clamp(2.2rem,6vw,4.7rem);margin:.1em 0}.tag{font-size:1.2rem;color:var(--muted);max-width:760px}.principle{display:inline-block;border:1px solid var(--amber);color:var(--amber);padding:8px 12px;border-radius:999px}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.card{background:rgba(13,38,59,.92);border:1px solid #24445d;border-radius:18px;padding:20px;margin-top:18px}
+textarea{width:100%;min-height:230px;background:#061827;color:white;border:1px solid #36536a;border-radius:12px;padding:14px;font-size:1rem;line-height:1.5}
+button{border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;margin:10px 8px 0 0}.primary{background:var(--amber);color:#14202b}.secondary{background:#173b54;color:white}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#16364c;color:var(--cyan);font-size:.85rem}.finding{border-left:4px solid var(--amber);padding:12px 14px;margin:12px 0;background:#091d2e;border-radius:8px}.finding b{color:var(--amber)}
+.evidence{font-family:monospace;background:#061827;padding:9px;border-radius:8px;color:#d9e5ee}.ok{color:#7ee787}.muted{color:var(--muted)}.hidden{display:none}
+footer{margin-top:30px;color:var(--muted);font-size:.9rem}
+</style></head><body><main>
+<div class="brand">PALM92 INTELLIGENCE</div><section class="hero"><span class="principle">AI investigates, humans decide.</span>
+<h1>JobShield AI</h1><p class="tag">Trace recruitment claims to evidence before you trust the offer. Preserve the source, review the evidence, and decide what to verify independently.</p></section>
+<div class="grid"><section class="card"><span class="badge">STEP 1 · SOURCE</span><h2>Paste a recruitment message</h2>
+<textarea id="source">Hello, I am Sarah from BrightPath Recruitment. We saw your profile and have an immediate remote administrator role paying £850 per week. Interviews are filling quickly, so reply on WhatsApp today to secure your place. No payment is required.</textarea>
+<button class="secondary" onclick="sample()">Load JS-001 sample</button><button class="primary" onclick="analyse()">Preserve & review evidence</button>
+<p class="muted">JobShield assesses only what is present in the source. It does not invent missing facts.</p></section>
+<section class="card"><span class="badge">GUARDRAILS</span><h2>Human review first</h2><p>Before findings are accepted, you can compare every claim with the original message.</p>
+<p class="ok">✓ Source preserved</p><p class="ok">✓ Evidence snippets traceable</p><p class="ok">✓ Unsupported claims prohibited</p><p class="ok">✓ Human remains decision-maker</p></section></div>
+<section id="results" class="card hidden"><span class="badge">STEP 2 · EVIDENCE</span><h2>Evidence review</h2><div id="evidence"></div>
+<label><input id="confirm" type="checkbox"> I have checked these snippets against the source.</label><br>
+<button class="primary" onclick="findings()">Confirm evidence & generate findings</button></section>
+<section id="findings" class="card hidden"><span class="badge">STEP 3 · FINDINGS</span><h2>NOTICE → MEANING → ACTION</h2><div id="findingList"></div>
+<button class="secondary" onclick="downloadReport()">Download case report</button></section>
+<footer>JobShield AI is an educational investigation aid, not a legal determination or automatic fraud-reporting service. Independently verify the employer and recruiter through trusted channels.<br><br><strong>Check the claim. Preserve the evidence. You decide.</strong></footer>
+</main><script>
+const defaultText=document.getElementById('source').value;
+function sample(){document.getElementById('source').value=defaultText}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function extract(t){let a=[];const rules=[
+[/immediate|urgent|quickly|today|now/i,'Time pressure'],[/£\s?\d+|salary|paying|per week|per hour/i,'Pay claim'],[/whatsapp|telegram|signal/i,'Messaging-channel recruitment'],[/remote|work from home/i,'Remote-work claim'],[/payment|fee|deposit|transfer|crypto|gift card/i,'Money-related wording']];
+rules.forEach(([r,l])=>{const m=t.match(r);if(m){const i=m.index||0;a.push({label:l,snippet:t.slice(Math.max(0,i-55),Math.min(t.length,i+100)).trim()})}});return a}
+function analyse(){const t=document.getElementById('source').value.trim();if(!t)return alert('Paste a recruitment message first.');const a=extract(t);document.getElementById('evidence').innerHTML=a.length?a.map(x=>'<p><b>'+x.label+'</b></p><div class="evidence">'+esc(x.snippet)+'</div>').join(''):'<p>No configured evidence patterns were found. That is a valid outcome.</p>';document.getElementById('results').classList.remove('hidden');document.getElementById('findings').classList.add('hidden')}
+function findings(){if(!document.getElementById('confirm').checked)return alert('Human review is required. Please confirm the evidence first.');const t=document.getElementById('source').value;let out=[];
+if(/immediate|urgent|quickly|today|now/i.test(t))out.push(['NOTICE','The message uses time-pressure language.','MEANING','Pressure can reduce the time available for independent checks.','ACTION','Do not rush. Verify the vacancy through the employer’s official website or switchboard.']);
+if(/whatsapp|telegram|signal/i.test(t))out.push(['NOTICE','Recruitment is being moved through a messaging channel.','MEANING','A messaging account alone does not establish recruiter authority.','ACTION','Confirm the recruiter through an independently sourced company contact.']);
+if(/£\s?\d+|salary|paying|per week|per hour/i.test(t))out.push(['NOTICE','The message contains a pay claim.','MEANING','Pay is a factual claim that can be checked against an official vacancy or employer contact.','ACTION','Compare the role, salary and employment terms with an official source.']);
+const saysNoPay=/no payment|no fee/i.test(t);if(saysNoPay)out.push(['NOTICE','The source explicitly says no payment is required.','MEANING','JobShield must preserve that evidence and must not invent a payment request.','ACTION','Continue checking the other claims independently; absence of a payment request does not prove the offer genuine.']);
+document.getElementById('findingList').innerHTML=out.map(x=>'<div class="finding"><b>'+x[0]+'</b><p>'+x[1]+'</p><b>'+x[2]+'</b><p>'+x[3]+'</p><b>'+x[4]+'</b><p>'+x[5]+'</p></div>').join('')||'<p>No rule-based concerns were generated from the confirmed evidence.</p>';document.getElementById('findings').classList.remove('hidden')}
+function downloadReport(){const t=document.getElementById('source').value;const report='JOBSHIELD AI CASE REPORT\nCase: JS-001 / user-provided source\n\nSOURCE\n'+t+'\n\nHuman review: confirmed\n\nThis report preserves evidence and recommended verification steps. It does not declare fraud.\n\nCheck the claim. Preserve the evidence. You decide.';const b=new Blob([report],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='jobshield-case-report.txt';a.click();URL.revokeObjectURL(a.href)}
+</script></body></html>
