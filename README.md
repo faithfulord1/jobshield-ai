@@ -20,10 +20,12 @@ Source → Evidence → Human confirmation → Deterministic rules → NOTICE / 
 - Preserve the original source text
 - Extract and review candidate claims
 - Human confirmation before findings
+- Exact-source review binding: editing the message invalidates prior confirmation
 - Evidence-backed NOTICE / MEANING / ACTION findings
 - Pressure-pattern timeline
 - No invented payment request or unsupported allegation
 - Downloadable case report
+- Report includes the reviewed source snapshot, evidence snippets and generated findings
 - Optional UK company-verification pathway
 - Clear limitations and safe next steps
 
@@ -43,6 +45,19 @@ The included fictional **BrightPath WhatsApp Offer (JS-001)** demonstrates that 
 ## Stack
 
 Hackathon MVP: browser-based HTML/CSS/JavaScript implementation for a fast, inspectable public demo. The architecture is designed to migrate to Next.js + TypeScript while preserving the same evidence and governance model.
+
+## Verification
+
+The core evidence and report rules are dependency-free and testable with Node.js:
+
+```bash
+node --test tests/jobshield-core.test.js
+node --check jobshield-core.js
+```
+
+GitHub Actions runs both checks. Tests verify that edited source text invalidates
+the human review, unreviewed exports fail closed, no-payment wording is preserved,
+and the report stays tied to the reviewed source, evidence and findings.
 
 ## Palm92 Intelligence
 
