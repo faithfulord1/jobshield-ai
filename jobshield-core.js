@@ -6,7 +6,7 @@
   "use strict";
 
   const evidenceRules = [
-    [/immediate|urgent|quickly|today|now/i, "Time pressure"],
+    [/\b(?:immediate|urgent|quickly|today|now)\b/i, "Time pressure"],
     [/£\s?\d+|salary|paying|per week|per hour/i, "Pay claim"],
     [/whatsapp|telegram|signal/i, "Messaging-channel recruitment"],
     [/remote|work from home/i, "Remote-work claim"],
@@ -29,7 +29,7 @@
 
   function generateFindings(source) {
     const findings = [];
-    if (/immediate|urgent|quickly|today|now/i.test(source)) findings.push({
+    if (/\b(?:immediate|urgent|quickly|today|now)\b/i.test(source)) findings.push({
       notice: "The message uses time-pressure language.",
       meaning: "Pressure can reduce the time available for independent checks.",
       action: "Do not rush. Verify the vacancy through the employer's official website or switchboard.",
