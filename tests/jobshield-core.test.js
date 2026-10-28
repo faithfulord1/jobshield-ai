@@ -2,6 +2,20 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const core = require("../jobshield-core.js");
 
+test("embedded words do not invent time-pressure evidence", () => {
+  for (const source of ["A known employer welcomes applications.", "Please acknowledge the role description.", "The position is currently unknown."]) {
+    assert.equal(core.extractEvidence(source).some(x => x.label === "Time pressure"), false);
+    assert.equal(core.generateFindings(source).some(x => /time-pressure/.test(x.notice)), false);
+  }
+});
+
+test("standalone pressure words remain detectable with punctuation and case", () => {
+  for (const word of ["IMMEDIATE", "Urgent!", "quickly", "today.", "now!"]) {
+    assert.equal(core.extractEvidence(word).some(x => x.label === "Time pressure"), true);
+    assert.equal(core.generateFindings(word).some(x => /time-pressure/.test(x.notice)), true);
+  }
+});
+
 const reviewed = "Immediate remote role paying £850 per week. Reply on WhatsApp today. No payment is required.";
 
 test("a changed source invalidates the human review", () => {
